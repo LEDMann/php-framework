@@ -1,0 +1,6 @@
+# https://httpd.apache.org/docs/2.4/rewrite/intro.html
+# https://httpd.apache.org/docs/2.4/rewrite/flags.html
+
+RewriteEngine on
+
+RewriteRule ^(.*)$ app/bootstrap.php?uri=$1 [QSA,L]
