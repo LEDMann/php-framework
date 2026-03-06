@@ -14,6 +14,9 @@ class Request
     public private(set) static array $qparams;
     public private(set) static array $fparams;
 
+    /**
+     * parse request headers and contextual information
+     */
     public static function parse_context() {
         self::$method  = $_SERVER['REQUEST_METHOD'];
         self::$uri     = $_SERVER['REQUEST_URI'];
@@ -21,15 +24,24 @@ class Request
         self::$cookies = array_map(fn($param) => self::parse_param_type($param), $_COOKIE);
     }
 
+    /**
+     * parse query parameters
+     */
     public static function parse_query() {
         self::$qparams = array_map(fn($param) => self::parse_param_type($param, FILTER_SANITIZE_EMAIL), $_GET);
     }
 
+    /**
+     * parse the request body, format consistent no matter copntent type or http method
+     */
     public static function parse_body() {
         self::$fparams = self::parse_form();
         self::$files   = array_map(fn($param) => self::parse_param_type($param), $_FILES);
     }
 
+    /**
+     * parses the parameters in an array to have the correct datatypes
+     */
     private static function parse_param_type($param, $sanitize = FILTER_UNSAFE_RAW) {
         return match (true) {
             is_array($param)                                                => array_map(fn($child) => self::parse_param_type($child), $param),
@@ -40,6 +52,9 @@ class Request
         };
     }
 
+    /**
+     * actual request body parsing
+     */
     private static function parse_form(): array {
         return match (self::$method) {
             'POST' => array_map(fn($param) => self::parse_param_type($param, FILTER_SANITIZE_EMAIL), $_POST),

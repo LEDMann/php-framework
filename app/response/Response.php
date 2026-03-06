@@ -9,17 +9,18 @@ class Response {
     private static array  $headers;
     private static array  $cookies;
 
-    public static string $body;
+    public static string $body = "";
 
     public static function __callStatic($name, $arguments) {
-        self::$body = "fchdsuykgbhrsyk";
         self::default_headers();
         self::respond(...$arguments);
     }
 
     private static function respond($code) {
         array_map(fn($header) => header($header), self::$headers);
-        echo self::$body;
+        http_response_code($code);
+        var_dump(self::$body);
+        exit();
     }
 
     private static function default_headers() {

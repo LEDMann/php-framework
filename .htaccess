@@ -3,4 +3,4 @@
 
 RewriteEngine on
 
-RewriteRule ^(.*)$ app/bootstrap.php?uri=$1 [QSA,L]
+RewriteRule ^(.*)$ app/bootstrap.php [QSA,L]
